@@ -14,6 +14,13 @@ module.exports = appInfo => {
 
   // use for cookie sign key, should change to your own and keep security
   config.keys = appInfo.name + '_1570517776492_5725';
+  // add your middleware config here
+  config.middleware = [];
+
+  // add your user config here
+  const userConfig = {
+    // myAppName: 'egg',
+  };
 
   config.mysql = {
     // 单数据库信息配置
@@ -55,13 +62,6 @@ module.exports = appInfo => {
     // },
   };
 
-  // add your middleware config here
-  config.middleware = [];
-
-  // add your user config here
-  const userConfig = {
-    // myAppName: 'egg',
-  };
 
   config.redis = {
     client: {
@@ -71,6 +71,23 @@ module.exports = appInfo => {
       db: 0,
     },
   };
+
+  // 跨域处理
+  config.cors = {
+    origin: 'http://localhost:8000',
+    allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH',
+  };
+
+  // oauth2
+  config.oAuth2Server = {
+    debug: appInfo.env === 'local',
+    grants: [ 'password' ], // grants: ['password', 'authorization_code', 'refresh_token']
+    clientId: 'umi', // 客户端id
+    clientSecret: '11111', // 客户端密码,
+    // accessTokenLifetime: 7200, // 自定义访问token的有效时间，默认一个小时有效期
+    // refreshTokenLifetime: 86400, // 自定义刷新token的有效时间，默认15天有效期
+  };
+
 
   return {
     ...config,

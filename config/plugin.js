@@ -17,4 +17,8 @@ module.exports = {
   security: {
     enable: false,
   },
+  cors: {
+    enable: true,
+    package: 'egg-cors',
+  },
 };
