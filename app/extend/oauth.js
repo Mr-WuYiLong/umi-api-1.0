@@ -1,13 +1,10 @@
 'use strict';
 
-const path = require('path');
+/**
+ * oauth2的model
+ */
+const moment = require('moment');
 module.exports = app => {
-
-  // // Mock Data
-  // nconf.use('file', {
-  //   file: path.join(app.config.baseDir, 'app/mock/db.json'),
-  // });
-
   class Model {
     constructor(ctx) {
       this.ctx = ctx;
@@ -22,6 +19,7 @@ module.exports = app => {
       return client;
     }
 
+    // 验证登录用户的账号和密码
     async getUser(username, password) {
       // 从数据库中获得登录者的账号和密码
       const user = await app.mysql.get('admin', { account: username });
@@ -31,6 +29,7 @@ module.exports = app => {
       return { userId: user.id };
     }
 
+    // access_token的验证
     async getAccessToken() {
       // const token = nconf.get('token');
       // token.accessTokenExpiresAt = new Date(token.accessTokenExpiresAt);
@@ -43,11 +42,30 @@ module.exports = app => {
       return 'tok';
     }
 
+    // 获得token并保存到数据库
     async saveToken(token, client, user) {
-      // 合并对象
-      const _token = Object.assign({}, token, { user }, { client });
-      // console.log(_token);
-      return _token;
+      const accessToken = {
+        access_token: token.accessToken,
+        expires_at: moment(token.accessTokenExpiresAt).format('YYYY-MM-DD HH:mm:ss'),
+        client_id: client.clientId,
+        user_id: user.userId,
+      };
+      const refreshToken = {
+        refresh_token: token.refreshToken,
+        expires_at: moment(token.refreshTokenExpiresAt).format('YYYY-MM-DD HH:mm:ss'),
+        client_id: client.clientId,
+        user_id: user.userId,
+      };
+      try {
+        // 保存access_token,refresh_token到数据库
+        await app.mysql.insert('access_token', accessToken);
+        await app.mysql.insert('refresh_token', refreshToken);
+        // 合并对象
+        const _token = Object.assign({}, token, { user }, { client });
+        return _token;
+      } catch (error) {
+        throw new Error('无法保存token');
+      }
     }
   }
 
