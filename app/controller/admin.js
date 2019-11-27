@@ -21,6 +21,33 @@ class AdminController extends Controller {
       data: result,
     };
   }
+
+  // 获得管理员的列表
+  async getAdminList() {
+    const { ctx } = this;
+    const { current, pageSize } = ctx.query.current;
+    const result = await ctx.app.mysql.select('admin', { where: { status: 0 } });
+    const data = await ctx.app.mysql.select('admin', {
+      where: { status: 0 },
+      orders: [[ 'id', 'desc' ]],
+      limit: pageSize,
+      offset: current,
+    });
+    if (result && result.length > 0) {
+      const adminList = {
+        data,
+        pagination: {
+          pageSize,
+          current,
+          total: result.length,
+        },
+      };
+      ctx.body = {
+        code: 0,
+        data: adminList,
+      };
+    }
+  }
 }
 
 module.exports = AdminController;

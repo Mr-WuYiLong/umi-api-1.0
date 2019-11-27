@@ -24,22 +24,21 @@ module.exports = app => {
       // 从数据库中获得登录者的账号和密码
       const user = await app.mysql.get('admin', { account: username });
       if (username !== user.account || password !== user.password) {
-        return;
+        return false;
       }
       return { userId: user.id };
     }
 
     // access_token的验证
-    async getAccessToken() {
-      // const token = nconf.get('token');
-      // token.accessTokenExpiresAt = new Date(token.accessTokenExpiresAt);
-      // token.refreshTokenExpiresAt = new Date(token.refreshTokenExpiresAt);
-      // const user = nconf.get('user');
-      // const client = nconf.get('client');
-      // token.user = user;
-      // token.client = client;
-      console.log(2222);
-      return 'tok';
+    async getAccessToken(bearerToken) {
+      const result = await app.mysql.get('access_token', { access_token: bearerToken });
+      const token = {
+        accessToken: result.access_token,
+        accessTokenExpiresAt: new Date(result.expires_at),
+        user: { id: result.user_id },
+        client: { id: result.client_id },
+      };
+      return token;
     }
 
     // 获得token并保存到数据库
@@ -65,6 +64,25 @@ module.exports = app => {
         return _token;
       } catch (error) {
         throw new Error('无法保存token');
+      }
+    }
+
+    // 通过refreshToken刷新token
+    async getRefreshToken(refreshToken) {
+      try {
+        const refToken = await this.ctx.model.RefreshToken.queryRefreshToken(refreshToken);
+        if (!refToken) return;
+        const user = await this.ctx.model.User.queryUser({ id: refToken.userId });
+        if (!user) return;
+        return {
+          refreshToken: refToken.refreshToken,
+          refreshTokenExpiresAt: refToken.refreshTokenExpiresAt,
+          scope: refToken.scope,
+          client: { id: refToken.clientId }, // with 'id' property
+          user,
+        };
+      } catch (err) {
+        return false;
       }
     }
   }

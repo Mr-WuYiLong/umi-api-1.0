@@ -11,4 +11,6 @@ module.exports = app => {
   router.post('/api/login/index', 'login.index');
   // 根据名字获得管理员信息
   router.get('/api/admin/getAdmin', 'admin.getAdmin');
+  // 获得管理员的列表
+  router.get('/api/admin/getAdminList', oAuth2Server.authenticate(), 'admin.getAdminList');
 };

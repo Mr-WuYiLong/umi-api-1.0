@@ -32,7 +32,7 @@
   "scripts": {
     "start": "egg-scripts start --daemon --title=egg-server-umi-api-1.0",
     "stop": "egg-scripts stop --title=egg-server-umi-api-1.0",
-    "dev": "egg-bin dev --port=7002",
+    "dev": "egg-bin dev --p=7002",
     "debug": "egg-bin debug",
     "test": "npm run lint -- --fix && npm run test-local",
     "test-local": "egg-bin test",
