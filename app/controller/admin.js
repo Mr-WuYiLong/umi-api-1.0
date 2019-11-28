@@ -25,7 +25,8 @@ class AdminController extends Controller {
   // 获得管理员的列表
   async getAdminList() {
     const { ctx } = this;
-    const { current, pageSize } = ctx.query.current;
+    const current = ctx.query.current;
+    const pageSize = ctx.query.pageSize;
     const result = await ctx.app.mysql.select('admin', { where: { status: 0 } });
     const data = await ctx.app.mysql.select('admin', {
       where: { status: 0 },
@@ -37,8 +38,8 @@ class AdminController extends Controller {
       const adminList = {
         data,
         pagination: {
-          pageSize,
-          current,
+          pageSize: Number(pageSize),
+          current: Number(current),
           total: result.length,
         },
       };

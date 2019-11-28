@@ -11,14 +11,32 @@ class LoginController extends Controller {
   async index() {
     const { ctx } = this;
     const { data } = ctx.request.body;
-    // 生成token
+    // 生成token 服务端到服务端
     const token = await ctx.curl('http://localhost:7002/api/token', {
       method: 'post',
       data,
       dataType: 'json',
       timeout: 10000,
     });
-    ctx.body = token;
+    delete token.data.client;
+    ctx.body = { data: token.data, status: token.status };
+  }
+
+  // async getAccessTokenOverTime() {
+  //   const { ctx } = this;
+  //   const access_token = ctx.query.access_token;
+  //   const result = await ctx.app.mysql.get('access_token', { access_token });
+  //   if (!result) {
+  //     ctx.body = {
+  //       code: 0,
+  //       data: result.access_token,
+  //     };
+  //   }
+  // }
+
+  async token() {
+    const { ctx } = this;
+    ctx.body = ctx.state.oauth.token;
   }
 }
 
