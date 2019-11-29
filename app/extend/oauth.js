@@ -67,19 +67,27 @@ module.exports = app => {
       }
     }
 
+    // 取消刷新token
+    async revokeToken(token) {
+      try {
+        return await app.mysql.delete('refresh_token', { refresh_token: token.refreshToken });
+      } catch (err) {
+        return false;
+      }
+    }
+
     // 通过refreshToken刷新token
     async getRefreshToken(refreshToken) {
       try {
-        const refToken = await this.ctx.model.RefreshToken.queryRefreshToken(refreshToken);
+        const refToken = await app.mysql.get('refresh_token', { refresh_token: refreshToken });
         if (!refToken) return;
-        const user = await this.ctx.model.User.queryUser({ id: refToken.userId });
+        const user = await app.mysql.get('admin', { id: refToken.user_id });
         if (!user) return;
         return {
-          refreshToken: refToken.refreshToken,
-          refreshTokenExpiresAt: refToken.refreshTokenExpiresAt,
-          scope: refToken.scope,
-          client: { id: refToken.clientId }, // with 'id' property
-          user,
+          refreshToken: refToken.refresh_token,
+          refreshTokenExpiresAt: new Date(refToken.expires_at),
+          client: { clientId: refToken.client_id }, // with 'id' property
+          user: { userId: user.id },
         };
       } catch (err) {
         return false;

@@ -84,7 +84,7 @@ module.exports = appInfo => {
     grants: [ 'password', 'refresh_token' ], // grants: ['password', 'authorization_code', 'refresh_token']
     clientId: 'umi', // 客户端id
     clientSecret: '11111', // 客户端密码,
-    accessTokenLifetime: 60, // 自定义访问token的有效时间，默认一个小时有效期,以秒为单位
+    accessTokenLifetime: 3600, // 自定义访问token的有效时间，默认一个小时有效期,以秒为单位
     refreshTokenLifetime: 604800, // 自定义刷新token的有效时间，默认15天有效期,以秒为单位
   };
 
