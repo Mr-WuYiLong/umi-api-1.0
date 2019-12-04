@@ -11,11 +11,15 @@ module.exports = app => {
   router.post('/api/login/index', 'login.index');
   // 刷新访问token
   router.post('/api/login/refreshToken', 'login.refreshToken');
-  // // 获得登录访问token的过期时间
+  // 获得登录访问token的过期时间
   // router.get('/api/login/getAccessTokenOverTime', oAuth2Server.authenticate(), 'login.getAccessTokenOverTime');
   // 根据名字获得管理员信息
   router.get('/api/admin/getAdmin', 'admin.getAdmin');
   // 获得管理员的列表
   router.get('/api/admin/getAdminList', oAuth2Server.authenticate(), 'admin.getAdminList');
+  // 查询角色列表
+  router.get('/api/role/getRolePage', oAuth2Server.authenticate(), 'role.getRolePage');
+  // 根据角色id查询
+  router.get('/api/role/getRoleList', oAuth2Server.authenticate(), 'role.getRoleList');
 
 };

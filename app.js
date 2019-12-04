@@ -1,6 +1,7 @@
 'use strict';
 const casbin = require('casbin');
-const TypeORMAdapter = require('./app/lib/adapter').default;
+// const TypeORMAdapter = require('./app/lib/adapter').default;
+const TypeORMAdapter = require('typeorm-adapter').default;
 // const MongooseAdapter = require('@elastic.io/casbin-mongoose-adapter');
 
 const path = require('path');
