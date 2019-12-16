@@ -17,9 +17,17 @@ module.exports = app => {
   router.get('/api/admin/getAdmin', 'admin.getAdmin');
   // 获得管理员的列表
   router.get('/api/admin/getAdminList', oAuth2Server.authenticate(), 'admin.getAdminList');
+  // 为管理员添加角色
+  router.post('/api/admin/addRoleForAdmin', 'admin.addRoleForAdmin');
   // 查询角色列表
   router.get('/api/role/getRolePage', oAuth2Server.authenticate(), 'role.getRolePage');
   // 根据角色id查询
   router.get('/api/role/getRoleList', oAuth2Server.authenticate(), 'role.getRoleList');
+  // 为角色添加权限
+  router.post('/api/permission/addPermission', 'permission.addPermission');
+  // 删除角色具有的权限
+  router.delete('/api/permission/deletePermission', 'permission.deletePermission');
+  // 权限分页
+  router.get('/api/permission/getPermissionPage', oAuth2Server.authenticate(), 'permission.getPermissionPage');
 
 };

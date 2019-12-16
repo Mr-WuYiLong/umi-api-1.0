@@ -21,6 +21,7 @@ class AppBootHook {
     // const adapter = await MongooseAdapter.newAdapter('mongodb://localhost:27017/blog');
     this.app.enforcer = await casbin.newEnforcer(path.join(this.app.config.baseDir, 'app/rabc_model.conf'), adapter);
     this.app.enforcer.loadPolicy();
+    // this.app.enforcer.EnableAutoSave(true);
     console.log('链接成功');
 
   }

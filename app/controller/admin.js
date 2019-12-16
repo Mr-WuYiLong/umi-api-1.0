@@ -49,6 +49,18 @@ class AdminController extends Controller {
       };
     }
   }
+
+  // 为管理员添加角色
+  async addRoleForAdmin() {
+    const { ctx } = this;
+    // const add = await this.app.enforcer.addRoleForUser('admin', '管理员');
+    // console.log(add);
+    const a = await this.app.enforcer.enforce('admin', 'ddd', 'post');
+    console.log(a);
+    ctx.body = {
+      code: 0,
+    };
+  }
 }
 
 module.exports = AdminController;
