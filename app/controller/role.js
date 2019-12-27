@@ -47,4 +47,7 @@ class RoleController extends Controller {
   }
 }
 
+// const add = await this.app.enforcer.addPermissionForUser('管理员', 'ddd', 'post');
+// console.log(add);
+
 module.exports = RoleController;
