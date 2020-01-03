@@ -23,10 +23,23 @@ module.exports = app => {
     async getUser(username, password) {
       // 从数据库中获得登录者的账号和密码
       const user = await app.mysql.get('admin', { account: username });
-      if (username !== user.account || password !== user.password) {
+      if (!user) { // 根据业务需要return 错误标识
         return false;
       }
-      return { userId: user.id };
+      if (username !== user.account || password !== user.password) {
+        return false;// 根据业务需要return 错误标识
+      }
+      // 查询用户角色， 获得角色具有的权限
+      const result = await app.mysql.get('role', { id: user.role_id });
+      const result1 = await app.mysql.select('permission', { where: { status: 0 }, columns: [ 'code' ] });
+      const arr = result.codes != null ? result.codes.split(',') : [];
+      const newArr = [];
+      result1.forEach(e => {
+        if (arr.includes(e.code)) {
+          newArr.push(e.code);
+        }
+      });
+      return { userId: user.id, codes: newArr };
     }
 
     // access_token的验证

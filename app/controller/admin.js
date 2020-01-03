@@ -22,7 +22,7 @@ class AdminController extends Controller {
     };
   }
 
-  // 获得管理员的列表
+  // 获得管理员的分页
   async getAdminList() {
     const { ctx } = this;
     const current = ctx.query.current;

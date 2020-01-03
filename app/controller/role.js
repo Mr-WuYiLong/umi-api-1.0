@@ -6,7 +6,7 @@
 const Controller = require('egg').Controller;
 class RoleController extends Controller {
 
-  // 查询角色列表
+  // 查询角色分页
   async getRolePage() {
     const { ctx } = this;
     const current = ctx.query.current;
@@ -34,7 +34,7 @@ class RoleController extends Controller {
     }
   }
 
-  // 根据角色的id查询
+  // 查询角色列表
   async getRoleList() {
     const { ctx } = this;
     const result = await ctx.app.mysql.select('role', { where: { status: 0 } });
@@ -42,6 +42,39 @@ class RoleController extends Controller {
       ctx.body = {
         code: 0,
         data: result,
+      };
+    }
+  }
+
+  // 根据id查询角色拥有的权限
+  async getRoleById() {
+    const { ctx } = this;
+    const id = ctx.query.id;
+    const result = await ctx.app.mysql.get('role', { id });
+    const result1 = await ctx.app.mysql.select('permission', { where: { status: 0 }, columns: [ 'code' ] });
+    const arr = result.codes != null ? result.codes.split(',') : [];
+    const newArr = [];
+    result1.forEach(e => {
+      if (arr.includes(e.code)) {
+        newArr.push(e.code);
+      }
+    });
+
+    ctx.body = {
+      code: 0,
+      data: newArr,
+    };
+  }
+
+  // 根据角色id分配权限
+  async assignPermissionById() {
+    const { ctx } = this;
+    const { checkedKeys, roleId } = ctx.request.body;
+    const result = await ctx.app.mysql.update('role', { codes: checkedKeys.length > 0 ? checkedKeys.join(',') : null, id: roleId });
+    if (result.affectedRows === 1) {
+      ctx.body = {
+        code: 0,
+        msg: '分配成功',
       };
     }
   }

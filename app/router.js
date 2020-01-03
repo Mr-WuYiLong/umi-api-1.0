@@ -23,13 +23,22 @@ module.exports = app => {
   router.get('/api/role/getRolePage', oAuth2Server.authenticate(), 'role.getRolePage');
   // 角色列表
   router.get('/api/role/getRoleList', oAuth2Server.authenticate(), 'role.getRoleList');
+  // 根据id查询角色信息
+  router.get('/api/role/getRoleById', oAuth2Server.authenticate(), 'role.getRoleById');
+  // 分配权限
+  router.put('/api/role/assignPermissionById', oAuth2Server.authenticate(), 'role.assignPermissionById');
   // 添加权限
   router.post('/api/permission/addPermission', oAuth2Server.authenticate(), 'permission.addPermission');
-  // 删除权限
-  router.delete('/api/permission/deletePermission', 'permission.deletePermission');
   // 权限分页
   router.get('/api/permission/getPermissionPage', oAuth2Server.authenticate(), 'permission.getPermissionPage');
   // 权限列表
   router.get('/api/permission/getPermissionList', oAuth2Server.authenticate(), 'permission.getPermissionList');
+  // 改变权限状态
+  router.put('/api/permission/changeStatus', oAuth2Server.authenticate(), 'permission.changeStatus');
+  // 根据id删除权限
+  router.delete('/api/permission/deletePermissionById', oAuth2Server.authenticate(), 'permission.deletePermissionById');
+  // 菜单权限
+  router.get('/api/permission/getMenuPermissionList', oAuth2Server.authenticate(), 'permission.getMenuPermissionList');
+
 
 };
