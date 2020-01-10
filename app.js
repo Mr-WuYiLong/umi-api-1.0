@@ -10,7 +10,6 @@ class AppBootHook {
     this.app = app;
   }
 
-
   // 应用已经启动完毕
   async didReady() {
     // 加载数据库链接
@@ -25,5 +24,6 @@ class AppBootHook {
     console.log('链接成功');
 
   }
+
 }
 module.exports = AppBootHook;

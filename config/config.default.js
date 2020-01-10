@@ -15,8 +15,10 @@ module.exports = appInfo => {
   // use for cookie sign key, should change to your own and keep security
   config.keys = appInfo.name + '_1570517776492_5725';
   // add your middleware config here
-  config.middleware = [];
-
+  // config.middleware = [ 'rbac' ];
+  // config.rbac = {
+  //   enable: true,
+  // };
   // add your user config here
   const userConfig = {
     // myAppName: 'egg',
@@ -75,7 +77,7 @@ module.exports = appInfo => {
   // 跨域处理
   config.cors = {
     origin: '*',
-    allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH',
+    allowMethods: 'GET,PUT,POST,DELETE',
   };
 
   // oauth2

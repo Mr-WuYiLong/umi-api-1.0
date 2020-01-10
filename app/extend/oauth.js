@@ -45,10 +45,12 @@ module.exports = app => {
     // access_token的验证
     async getAccessToken(bearerToken) {
       const result = await app.mysql.get('access_token', { access_token: bearerToken });
+      // 根据用户id查找对应的角色id
+      const user = await app.mysql.get('admin', { id: result.user_id });
       const token = {
         accessToken: result.access_token,
         accessTokenExpiresAt: new Date(result.expires_at),
-        user: { id: result.user_id },
+        user: { id: result.user_id, roleId: user.role_id },
         client: { id: result.client_id },
       };
       return token;

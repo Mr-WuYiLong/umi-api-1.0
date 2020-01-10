@@ -12,7 +12,7 @@ class LoginController extends Controller {
     const { ctx } = this;
     const { data } = ctx.request.body;
     // 生成token 服务端到服务端
-    const token = await ctx.curl('http://localhost:7002/api/token', {
+    const token = await ctx.curl('http://localhost:7002/api/login/token', {
       method: 'post',
       data,
       dataType: 'json',
@@ -26,7 +26,7 @@ class LoginController extends Controller {
     const { ctx } = this;
     const { data } = ctx.request.body;
     // 生成token 服务端到服务端
-    const token = await ctx.curl('http://localhost:7002/api/token', {
+    const token = await ctx.curl('http://localhost:7002/api/login/token', {
       method: 'post',
       data,
       dataType: 'json',

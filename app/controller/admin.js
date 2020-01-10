@@ -25,21 +25,18 @@ class AdminController extends Controller {
   // 获得管理员的分页
   async getAdminList() {
     const { ctx } = this;
-    const current = ctx.query.current;
-    const pageSize = ctx.query.pageSize;
+    const current = Number(ctx.query.current);
+    const pageSize = Number(ctx.query.pageSize);
     const result = await ctx.app.mysql.select('admin', { where: { status: 0 } });
-    const data = await ctx.app.mysql.select('admin', {
-      where: { status: 0 },
-      orders: [[ 'id', 'desc' ]],
-      limit: pageSize,
-      offset: current,
-    });
+    const sql = 'select * from admin  where status = 0 ';
+    const offset = (current - 1) * pageSize;
+    const data = await ctx.app.mysql.query(`${sql} order by id desc limit ${offset},${pageSize} `);
     if (result && result.length > 0) {
       const adminList = {
         data,
         pagination: {
-          pageSize: Number(pageSize),
-          current: Number(current),
+          pageSize,
+          current,
           total: result.length,
         },
       };
@@ -50,16 +47,42 @@ class AdminController extends Controller {
     }
   }
 
-  // 为管理员添加角色
-  async addRoleForAdmin() {
+  // 新增管理员
+  async addAdmin() {
     const { ctx } = this;
-    // const add = await this.app.enforcer.addRoleForUser('admin', '管理员');
-    // console.log(add);
-    const a = await this.app.enforcer.enforce('admin', 'ddd', 'post');
-    console.log(a);
-    ctx.body = {
-      code: 0,
-    };
+    const data = ctx.request.body;
+    const result = await ctx.app.mysql.insert('admin', { ...data });
+    if (result.affectedRows === 1) {
+      const record = await ctx.app.mysql.get('admin', { id: result.insertId });
+      ctx.body = {
+        code: 0,
+        data: record,
+      };
+    }
+  }
+
+  // 更新管理员
+  async updateAdmin() {
+    const { ctx } = this;
+    const { record } = ctx.request.body;
+    const result = await ctx.app.mysql.update('admin', { ...record });
+    if (result.affectedRows === 1) {
+      ctx.body = {
+        code: 0,
+      };
+    }
+  }
+
+  // 删除管理员
+  async deleteAdminById() {
+    const { ctx } = this;
+    const { id } = ctx.request.body;
+    const result = await ctx.app.mysql.delete('admin', { id });
+    if (result.affectedRows === 1) {
+      ctx.body = {
+        code: 0,
+      };
+    }
   }
 }
 
