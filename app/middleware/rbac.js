@@ -4,7 +4,7 @@
 module.exports = options => {
 
   return async function rbac(ctx, next) {
-    await next();
+
     // 请求的处理
     const { method, url } = ctx.request;
     let path = '';
@@ -22,6 +22,9 @@ module.exports = options => {
         code: 403,
         url,
       };
+      return;
     }
+    await next();
+
   };
 };

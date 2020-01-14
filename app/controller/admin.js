@@ -28,9 +28,17 @@ class AdminController extends Controller {
     const current = Number(ctx.query.current);
     const pageSize = Number(ctx.query.pageSize);
     const result = await ctx.app.mysql.select('admin', { where: { status: 0 } });
-    const sql = 'select * from admin  where status = 0 ';
+
+    // 搜索的字段
+    const { account } = ctx.query;
+    const params = {};
+    let sql = 'select * from admin  where status = 0 ';
+    if (account !== '' && account !== undefined) {
+      sql += 'and account like :account ';
+      params.account = '%' + account + '%';
+    }
     const offset = (current - 1) * pageSize;
-    const data = await ctx.app.mysql.query(`${sql} order by id desc limit ${offset},${pageSize} `);
+    const data = await ctx.app.mysql.query(`${sql} order by id desc limit ${offset},${pageSize} `, params);
     if (result && result.length > 0) {
       const adminList = {
         data,
@@ -81,6 +89,19 @@ class AdminController extends Controller {
     if (result.affectedRows === 1) {
       ctx.body = {
         code: 0,
+      };
+    }
+  }
+
+  // 修改密码
+  async updatePassword() {
+    const { ctx } = this;
+    const { username, password } = ctx.request.body;
+    const result = await ctx.app.mysql.update('admin', { password }, { where: { account: username } });
+    if (result.affectedRows === 1) {
+      ctx.body = {
+        code: 0,
+        msg: '修改密码成功',
       };
     }
   }

@@ -32,8 +32,9 @@ module.exports = app => {
       // 查询用户角色， 获得角色具有的权限
       const result = await app.mysql.get('role', { id: user.role_id });
       const result1 = await app.mysql.select('permission', { where: { status: 0 }, columns: [ 'code' ] });
-      const arr = result.codes != null ? result.codes.split(',') : [];
+      const arr = result.codes !== null ? result.codes.split(',') : [];
       const newArr = [];
+      // console.log(arr, result1);
       result1.forEach(e => {
         if (arr.includes(e.code)) {
           newArr.push(e.code);
@@ -44,6 +45,7 @@ module.exports = app => {
 
     // access_token的验证
     async getAccessToken(bearerToken) {
+      // console.log(bearerToken);
       const result = await app.mysql.get('access_token', { access_token: bearerToken });
       // 根据用户id查找对应的角色id
       const user = await app.mysql.get('admin', { id: result.user_id });

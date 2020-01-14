@@ -196,7 +196,12 @@ class PermissionController extends Controller {
     const { ctx } = this;
     const { id } = ctx.request.body;
     const result = await ctx.app.mysql.update('permission', { id, status: 1 });
+    console.log(result);
     if (result.affectedRows === 1) {
+      const temp = await ctx.app.mysql.get('permission', { id, status: 1 });
+      if (temp) {
+        await this.app.enforcer.deletePermission(temp.path);
+      }
       // 将pid为id的权限,变为1
       ctx.body = {
         code: 0,

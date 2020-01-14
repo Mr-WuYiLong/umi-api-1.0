@@ -18,6 +18,7 @@ module.exports = appInfo => {
   // config.middleware = [ 'rbac' ];
   // config.rbac = {
   //   enable: true,
+  //   ignore: [ '/api/login', '/init', '/initAdmin' ],
   // };
   // add your user config here
   const userConfig = {

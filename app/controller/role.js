@@ -13,7 +13,6 @@ class RoleController extends Controller {
     const pageSize = Number(ctx.query.pageSize);
     // 搜索的字段
     const { name } = ctx.query;
-    const result = await ctx.app.mysql.select('role', { where: { status: 0 } });
     const params = {};
     let sql = 'select * from role where status = 0 ';
     if (name !== '' && name !== undefined) {
@@ -22,6 +21,7 @@ class RoleController extends Controller {
     }
     const offset = (current - 1) * pageSize;
     const data = await ctx.app.mysql.query(sql + `order by id desc limit ${offset}, ${pageSize}`, params);
+    const result = await ctx.app.mysql.select('role', { where: { status: 0 } });
     if (result && result.length > 0) {
       const roleList = {
         data,
@@ -138,12 +138,21 @@ class RoleController extends Controller {
   async deleteRoleId() {
     const { ctx } = this;
     const { id } = ctx.request.body;
-    const result = await ctx.app.mysql.update('role', { id, status: 1 });
-    if (result.affectedRows === 1) {
+    // const result = await ctx.app.mysql.update('role', { id, status: 1 });
+    const result = await ctx.app.mysql.select('admin', { where: { role_id: id, status: 0 } });
+    if (result.length > 0) {
+      ctx.body = {
+        code: 1,
+        msg: '角色不可删除,用户尚存',
+      };
+    } else {
+      await ctx.app.mysql.update('role', { id, status: 1 });
       ctx.body = {
         code: 0,
       };
     }
+
+
   }
 }
 
