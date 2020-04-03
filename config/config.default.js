@@ -29,7 +29,7 @@ module.exports = appInfo => {
     // 单数据库信息配置
     client: {
       // host
-      host: 'localhost',
+      host: '192.168.1.101',
       // 端口号
       port: '3306',
       // 用户名
@@ -49,7 +49,7 @@ module.exports = appInfo => {
     // mysql
     typeORM: {
       type: 'mysql',
-      host: 'localhost',
+      host: '192.168.1.101',
       port: 3306,
       username: 'root',
       password: 'mysqlpwd',
@@ -66,14 +66,14 @@ module.exports = appInfo => {
   };
 
 
-  config.redis = {
-    client: {
-      port: 6379, // Redis port
-      host: '127.0.0.1', // Redis host
-      password: '',
-      db: 0,
-    },
-  };
+  // config.redis = {
+  //   client: {
+  //     port: 6379, // Redis port
+  //     host: '192.168.1.114', // Redis host
+  //     password: '',
+  //     db: 0,
+  //   },
+  // };
 
   // 跨域处理
   config.cors = {
@@ -89,6 +89,14 @@ module.exports = appInfo => {
     clientSecret: '11111', // 客户端密码,
     accessTokenLifetime: 3600, // 自定义访问token的有效时间，默认一个小时有效期,以秒为单位
     refreshTokenLifetime: 604800, // 自定义刷新token的有效时间，默认15天有效期,以秒为单位
+  };
+
+  config.cluster = {
+    listen: {
+      path: '',
+      port: 7002,
+      hostname: '0.0.0.0',
+    },
   };
 
 

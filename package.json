@@ -30,7 +30,7 @@
     "node": ">=10.0.0"
   },
   "scripts": {
-    "start": "egg-scripts start --daemon --title=egg-server-umi-api-1.0",
+    "start": "egg-scripts start --p=7002  --title=egg-server-umi-api-1.0",
     "stop": "egg-scripts stop --title=egg-server-umi-api-1.0",
     "dev": "egg-bin dev --p=7002",
     "debug": "egg-bin debug",
